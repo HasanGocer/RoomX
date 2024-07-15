@@ -13,7 +13,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
 
     [SerializeField] Animator characterAnim;
-    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft";
+    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", PickUpName = "IsPickUp", GateOpenName = "IsGateOpen", GateCloseName = "IsGateClose";
 
     public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, int speedFactor, UnityAction FinishFunc)
     {
@@ -69,6 +69,24 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         AllAnimOff();
         characterAnim.SetBool(walkName, true);
     }
+    public void PickUpAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(PickUpName, true);
+        characterAnim.SetBool(idleName, true);
+    }
+    public void GateOpenAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(GateOpenName, true);
+        characterAnim.SetBool(idleName, true);
+    }
+    public void GateCloseAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(GateCloseName, true);
+        characterAnim.SetBool(idleName, true);
+    }
 
     private void TurnLeftAnim()
     {
@@ -85,7 +103,10 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     {
         characterAnim.SetBool(idleName, false);
         characterAnim.SetBool(walkName, false);
+        characterAnim.SetBool(PickUpName, false);
         characterAnim.SetBool(turnRightName, false);
         characterAnim.SetBool(turnLeftName, false);
+        characterAnim.SetBool(GateCloseName, false);
+        characterAnim.SetBool(GateOpenName, false);
     }
 }

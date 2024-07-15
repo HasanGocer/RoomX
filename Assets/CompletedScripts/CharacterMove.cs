@@ -14,6 +14,7 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     [SerializeField] float interactionDistance = 1.0f;
     [SerializeField] int TurnSpeed = 4;
     bool isMove = false;
+    bool isPickUp = false;
 
     GameObject interactiveObject;
 
@@ -70,6 +71,8 @@ public class CharacterMove : MonoSingleton<CharacterMove>
             float distance = Vector3.Distance(transform.position, interactiveObject.transform.position);
             if (distance <= interactionDistance)
             {
+                isPickUp = true;
+                CharacterAnim.Instance.PickUpAnim();
                 interactiveObject.GetComponent<InteractiveID>().TouchObject();
                 interactiveObject = null;
             }
@@ -86,13 +89,16 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     }
     private void CheckedMove()
     {
-        if (agent.velocity == Vector3.zero) if (isMove == true)
+        if (agent.velocity == Vector3.zero)
+            if (isMove)
             {
                 isMove = false;
-                CharacterAnim.Instance.IdleAnim();
-            }
-            else { }
-        else if (isMove == false) isMove = true;
 
+                if (!isPickUp)
+                    CharacterAnim.Instance.IdleAnim();
+                else
+                    isPickUp = false;
+            }
+            else if (!isMove) isMove = true;
     }
 }
