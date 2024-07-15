@@ -13,7 +13,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
 
     [SerializeField] Animator characterAnim;
-    [SerializeField] string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft";
+    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft";
 
     public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, int speedFactor, UnityAction FinishFunc)
     {
