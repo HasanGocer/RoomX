@@ -32,12 +32,28 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                     if (hit.collider.gameObject.CompareTag(interactiveName))
                     {
                         interactiveObject = hit.collider.gameObject;
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () => { agent.SetDestination(interactiveObject.transform.position); CharacterAnim.Instance.WalkAnim(); }));
+                        agent.velocity = Vector3.zero;
+                        agent.Stop();
+
+                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+                        {
+                            agent.SetDestination(interactiveObject.transform.position);
+                            CharacterAnim.Instance.WalkAnim();
+                            agent.Resume();
+                        }));
                     }
                     else if (hit.collider.gameObject.CompareTag(floorName))
                     {
                         interactiveObject = null;
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, hit.point, TurnSpeed, () => { agent.SetDestination(hit.point); CharacterAnim.Instance.WalkAnim(); }));
+                        agent.velocity = Vector3.zero;
+                        agent.Stop();
+
+                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, hit.point, TurnSpeed, () =>
+                        {
+                            agent.SetDestination(hit.point);
+                            CharacterAnim.Instance.WalkAnim();
+                            agent.Resume();
+                        }));
                     }
 
             }
