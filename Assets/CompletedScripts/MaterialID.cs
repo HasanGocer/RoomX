@@ -9,7 +9,6 @@ public class MaterialID : MonoBehaviour
 
     void Start()
     {
-        // Materyali al
         Material material = objectRenderer.material;
 
         material.SetFloat("_Mode", 3);
@@ -21,11 +20,8 @@ public class MaterialID : MonoBehaviour
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         material.renderQueue = 3000;
 
-        // Materyalin mevcut rengini al
         Color color = material.color;
-        // Rengin alpha deðerini deðiþtir
         color.a = newAlpha;
-        // Deðiþtirilen rengi materyale geri ata
         material.color = color;
     }
 

@@ -28,7 +28,7 @@ public class CameraTargetFollow : MonoBehaviour
 
         Vector3 desiredPosition = target.position + Quaternion.Euler(0, currentYaw, 0) * offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        transform.position = smoothedPosition;
+        transform.position = smoothedPosition * ScrollUpDown.Instance.GetScrollValue();
 
         transform.LookAt(target);
     }

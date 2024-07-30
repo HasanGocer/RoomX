@@ -3,7 +3,6 @@ using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
-using static UnityEngine.Rendering.DebugUI;
 
 public class CharacterMove : MonoSingleton<CharacterMove>
 {
@@ -24,46 +23,50 @@ public class CharacterMove : MonoSingleton<CharacterMove>
         InteractiveFinish();
 
         if (Input.GetMouseButtonDown(0))
+        {
             if (!IsPointerOverUIElement())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
                 if (Physics.Raycast(ray, out hit))
+                {
                     if (hit.collider.gameObject.CompareTag(interactiveName))
                     {
                         interactiveObject = hit.collider.gameObject;
                         agent.velocity = Vector3.zero;
-                        agent.Stop();
+                        agent.isStopped = true;
 
                         StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
                         {
                             agent.SetDestination(interactiveObject.transform.position);
                             CharacterAnim.Instance.WalkAnim();
-                            agent.Resume();
+                            agent.isStopped = false;
                         }));
                     }
                     else if (hit.collider.gameObject.CompareTag(floorName))
                     {
                         interactiveObject = null;
                         agent.velocity = Vector3.zero;
-                        agent.Stop();
+                        agent.isStopped = true;
 
                         StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, hit.point, TurnSpeed, () =>
                         {
                             agent.SetDestination(hit.point);
                             CharacterAnim.Instance.WalkAnim();
-                            agent.Resume();
+                            agent.isStopped = false;
                         }));
                     }
-
+                }
             }
+        }
     }
 
     public bool GetIsMove()
     {
         return isMove;
     }
+
     private void InteractiveFinish()
     {
         if (interactiveObject != null)
@@ -72,8 +75,10 @@ public class CharacterMove : MonoSingleton<CharacterMove>
             if (distance <= interactionDistance)
             {
                 isPickUp = true;
+                agent.velocity = Vector3.zero;
+                agent.isStopped = true;
                 CharacterAnim.Instance.PickUpAnim();
-                interactiveObject.GetComponent<InteractiveID>().TouchObject();
+                //interactiveObject.GetComponent<InteractiveID>().TouchObject();
                 interactiveObject = null;
             }
         }
@@ -87,9 +92,11 @@ public class CharacterMove : MonoSingleton<CharacterMove>
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
     }
+
     private void CheckedMove()
     {
         if (agent.velocity == Vector3.zero)
+        {
             if (isMove)
             {
                 isMove = false;
@@ -99,6 +106,9 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                 else
                     isPickUp = false;
             }
-            else if (!isMove) isMove = true;
+        }
+        else
+            if (!isMove)
+            isMove = true;
     }
 }
