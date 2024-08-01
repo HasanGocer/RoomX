@@ -78,6 +78,7 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                 agent.velocity = Vector3.zero;
                 agent.isStopped = true;
                 CharacterAnim.Instance.PickUpAnim();
+                InteractiveManager.Instance.SetTarget(interactiveObject);
                 //interactiveObject.GetComponent<InteractiveID>().TouchObject();
                 interactiveObject = null;
             }

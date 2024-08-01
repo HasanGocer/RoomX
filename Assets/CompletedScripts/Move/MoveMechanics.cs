@@ -15,6 +15,10 @@ public class MoveMechanics : MonoSingleton<MoveMechanics>
     {
         StartCoroutine(MoveLerpIEnum(obj, finishPos, speedFactor, isMove));
     }
+    public void MoveLerpQuaternion(GameObject obj, Quaternion finishPos, int speedFactor, ref bool isMove)
+    {
+        StartCoroutine(MoveLerpIEnumQuaternion(obj, finishPos, speedFactor, isMove));
+    }
     public void MoveStabile(GameObject obj, Vector3 finishPos, int speedFactor, ref bool isMove, UnityAction FinishFunc)
     {
         StartCoroutine(MoveStabileIEnum(obj, finishPos, speedFactor, isMove, FinishFunc));
@@ -95,6 +99,17 @@ public class MoveMechanics : MonoSingleton<MoveMechanics>
         {
             lerpCount += Time.deltaTime * speedFactor;
             obj.transform.position = Vector3.Lerp(obj.transform.position, finishPos, lerpCount);
+            yield return null;
+        }
+    }
+    private IEnumerator MoveLerpIEnumQuaternion(GameObject obj, Quaternion finishPos, int speedFactor, bool isMove)
+    {
+        float lerpCount = 0;
+
+        while (isMove && lerpCount < 1)
+        {
+            lerpCount += Time.deltaTime * speedFactor;
+            obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, finishPos, lerpCount);
             yield return null;
         }
     }

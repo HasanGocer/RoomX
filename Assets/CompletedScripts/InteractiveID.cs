@@ -4,10 +4,37 @@ using UnityEngine;
 
 public class InteractiveID : MonoBehaviour
 {
-    [SerializeField] int interactiveCount;
+    [SerializeField] int interactiveID;
+    [SerializeField] ObjectRotation objectRotation;
+    [SerializeField] Vector3 tempMiniScale;
 
+    private void Start()
+    {
+        CheckedOnline();
+    }
+
+
+    public void SetScale()
+    {
+        transform.localScale = tempMiniScale;
+    }
+
+    public int GetInteractiveID()
+    {
+        return interactiveID;
+    }
+
+    public ObjectRotation GetObjectRotation()
+    {
+        return objectRotation;
+    }
     public void TouchObject()
     {
-        InteractiveManager.Instance.PanelOpen(interactiveCount);
+        InteractiveManager.Instance.PanelOpen(interactiveID);
+    }
+
+    private void CheckedOnline()
+    {
+        if (EnvanterManager.Instance.envanter.itemChecked[interactiveID]) gameObject.SetActive(false);
     }
 }
