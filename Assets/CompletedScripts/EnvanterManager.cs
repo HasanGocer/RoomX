@@ -17,6 +17,7 @@ public class EnvanterManager : MonoSingleton<EnvanterManager>
     public class EnvanterUI
     {
         public List<Image> itemImage = new List<Image>();
+        public List<bool> itemChecked = new List<bool>();
     }
 
     public Envanter envanter;
@@ -41,13 +42,19 @@ public class EnvanterManager : MonoSingleton<EnvanterManager>
 
     private void StartEnvanterUI()
     {
-        foreach (Image item in envanterUI.itemImage)
-            item.sprite = blackSprite;
+        for (int i = 0; i < envanterUI.itemImage.Count; i++)
+        {
+            envanterUI.itemImage[i].sprite = blackSprite;
+            envanterUI.itemChecked[i] = false;
+        }
 
         int imageCount = 0;
         for (int i = 0; i < envanter.itemChecked.Count; i++)
             if (envanter.itemChecked[i])
+            {
                 envanterUI.itemImage[imageCount].sprite = envanter.itemImage[i];
+                envanterUI.itemChecked[imageCount] = true;
+            }
     }
 
     public void ItemAdd(InteractiveID interactiveID)

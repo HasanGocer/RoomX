@@ -5,38 +5,40 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 {
     [SerializeField] int interactiveID;
     private Vector3 originalPosition;
+    private bool canDrag = false;
 
     // Sürükleme iþlemi baþladýðýnda çaðrýlýr
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Sürükleme izni kontrolü
         originalPosition = transform.position;
-        if (EnvanterManager.Instance.envanter.itemChecked[interactiveID])
-            return;
 
+        if (EnvanterManager.Instance.envanterUI.itemChecked[interactiveID]) canDrag = true;
+        else canDrag = false;
     }
-
 
     // Sürükleme sýrasýnda çaðrýlýr
     public void OnDrag(PointerEventData eventData)
     {
-        // Nesneyi farenin konumuna göre sürükleme
+        if (!canDrag)
+            return;
+
         transform.position = Input.mousePosition;
     }
 
     // Sürükleme bittiðinde çaðrýlýr
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!canDrag)
+            return;
+
         // Nesneyi býrakma iþlemi
         if (IsValidDrop(eventData))
         {
             // Geçerli bir yere býrakýlmýþsa burada kalabilir
         }
         else
-        {
-            // Geçersiz bir yere býrakýlmýþsa orijinal konumuna geri döner
             transform.position = originalPosition;
-        }
+
     }
 
     // Nesneyi býrakma yerini kontrol etmek için kullanýlabilir

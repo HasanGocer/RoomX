@@ -4445,7 +4445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lengthFromHeelToToes: 0.1
-  maxRotationAngle: 45
+  maxRotationAngle: 10
   ankleHeightOffset: 0
   enableIKPositioning: 1
   enableIKRotating: 1
