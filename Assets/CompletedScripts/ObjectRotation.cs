@@ -12,7 +12,6 @@ public class ObjectRotation : MonoBehaviour
 
             float mouseY = Input.GetAxis("Mouse Y");
 
-            // Nesneyi döndür
             transform.Rotate(Vector3.up, -mouseX * rotationSpeed * Time.deltaTime, Space.World);
             transform.Rotate(Vector3.right, mouseY * rotationSpeed * Time.deltaTime, Space.World);
         }

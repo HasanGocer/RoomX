@@ -64,6 +64,12 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: IsWalk
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsTurnRight
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsTurnLeft
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1584243009335460268}
   m_Solo: 0
@@ -190,6 +196,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsTurnLeft
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsWalk
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2232912002050815423}
@@ -363,6 +372,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsTurnRight
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: IsWalk
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -680319503264290411}
@@ -808,7 +820,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 9c23c5a1ecd21b54a86d128def1a7716,
+  m_Motion: {fileID: -203655887218126122, guid: bbc8f4e0802b17a4ea9163ffafa69fca,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 

@@ -10,6 +10,7 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     [SerializeField] GameObject targetTemp;
     [SerializeField] string floorName;
     [SerializeField] string interactiveName;
+    [SerializeField] string paintingName;
     [SerializeField] float interactionDistance = 1.0f;
     [SerializeField] int TurnSpeed = 4;
     bool isMove = false;
@@ -31,6 +32,20 @@ public class CharacterMove : MonoSingleton<CharacterMove>
 
                 if (Physics.Raycast(ray, out hit))
                 {
+                    if (hit.collider.gameObject.CompareTag(paintingName))
+                    {
+                        interactiveObject = hit.collider.gameObject;
+                        agent.velocity = Vector3.zero;
+                        agent.isStopped = true;
+
+                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+                        {
+                            Vector3 tempPos = new Vector3(interactiveObject.transform.position.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, interactiveObject.transform.position.z);
+                            agent.SetDestination(tempPos);
+                            CharacterAnim.Instance.WalkAnim();
+                            agent.isStopped = false;
+                        }));
+                    }
                     if (hit.collider.gameObject.CompareTag(interactiveName))
                     {
                         interactiveObject = hit.collider.gameObject;
@@ -39,7 +54,8 @@ public class CharacterMove : MonoSingleton<CharacterMove>
 
                         StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
                         {
-                            agent.SetDestination(interactiveObject.transform.position);
+                            Vector3 tempPos = new Vector3(interactiveObject.transform.position.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, interactiveObject.transform.position.z);
+                            agent.SetDestination(tempPos);
                             CharacterAnim.Instance.WalkAnim();
                             agent.isStopped = false;
                         }));
@@ -52,7 +68,8 @@ public class CharacterMove : MonoSingleton<CharacterMove>
 
                         StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, hit.point, TurnSpeed, () =>
                         {
-                            agent.SetDestination(hit.point);
+                            Vector3 tempPos = new Vector3(hit.point.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, hit.point.z);
+                            agent.SetDestination(tempPos);
                             CharacterAnim.Instance.WalkAnim();
                             agent.isStopped = false;
                         }));
@@ -71,17 +88,31 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     {
         if (interactiveObject != null)
         {
-            float distance = Vector3.Distance(transform.position, interactiveObject.transform.position);
+            float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
             if (distance <= interactionDistance)
             {
                 isPickUp = true;
                 agent.velocity = Vector3.zero;
                 agent.isStopped = true;
-                CharacterAnim.Instance.PickUpAnim();
-                InteractiveManager.Instance.SetTarget(interactiveObject);
-                //interactiveObject.GetComponent<InteractiveID>().TouchObject();
+                SelectObject();
                 interactiveObject = null;
             }
+        }
+    }
+
+    private void SelectObject()
+    {
+        if (interactiveObject.CompareTag(floorName))
+        {
+            CharacterAnim.Instance.PickUpAnim();
+            InteractiveManager.Instance.SetTarget(interactiveObject);
+            interactiveObject = null;
+        }
+        else if (interactiveObject.CompareTag(paintingName))
+        {
+            CharacterAnim.Instance.IdleAnim();
+            PaintingSearchSystem.Instance.SetCamera(interactiveObject);
+            interactiveObject = null;
         }
     }
 

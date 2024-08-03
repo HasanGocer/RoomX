@@ -32,10 +32,10 @@ public class EnvanterManager : MonoSingleton<EnvanterManager>
 
     private void StartEnvanter()
     {
-        if (PlayerPrefs.HasKey("first")) EnvanterPlacementRead();
+        if (PlayerPrefs.HasKey("firstEnvanter")) EnvanterPlacementRead();
         else
         {
-            PlayerPrefs.SetInt("first", 1);
+            PlayerPrefs.SetInt("firstEnvanter", 1);
             EnvanterPlacementWrite();
         }
     }

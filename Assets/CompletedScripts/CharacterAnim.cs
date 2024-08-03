@@ -15,7 +15,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     [SerializeField] Animator characterAnim;
     string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", PickUpName = "IsPickUp", GateOpenName = "IsGateOpen", GateCloseName = "IsGateClose";
 
-    public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, int speedFactor, UnityAction FinishFunc)
+    public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, float speedFactor, UnityAction FinishFunc)
     {
         StopAllCoroutines();
 
@@ -27,11 +27,13 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         if (ChangeWay(tempObject.transform, finishPosGO.transform) == Way.left) TurnLeftAnim();
         else TurnRightAnim();
 
+        Quaternion startRotation = Quaternion.Euler(0, obj.transform.rotation.eulerAngles.y, 0);
+        Quaternion targetRotation = Quaternion.Euler(0, tempObject.transform.rotation.eulerAngles.y, 0);
 
         while (lerpCount < 1)
         {
             lerpCount += Time.deltaTime * speedFactor;
-            obj.transform.rotation = Quaternion.Lerp(obj.transform.rotation, tempObject.transform.rotation, lerpCount);
+            obj.transform.rotation = Quaternion.Lerp(startRotation, targetRotation, lerpCount);
             yield return null;
         }
 
@@ -40,6 +42,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
         FinishFunc();
     }
+
 
     private Way ChangeWay(Transform objectA, Transform objectB)
     {
@@ -88,16 +91,18 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         characterAnim.SetBool(idleName, true);
     }
 
-    private void TurnLeftAnim()
-    {
-        AllAnimOff();
-        characterAnim.SetBool(turnLeftName, true);
-    }
-    private void TurnRightAnim()
-    {
-        AllAnimOff();
-        characterAnim.SetBool(turnRightName, true);
-    }
+     private void TurnLeftAnim()
+     {
+         AllAnimOff();
+         characterAnim.SetBool(turnLeftName, true);
+        characterAnim.SetBool(walkName, true);
+     }
+     private void TurnRightAnim()
+     {
+         AllAnimOff();
+         characterAnim.SetBool(turnRightName, true);
+        characterAnim.SetBool(walkName, true);
+     }
 
     private void AllAnimOff()
     {
