@@ -7,6 +7,7 @@ public class InformationUISystem : MonoBehaviour
     public RectTransform contentPanel; // ScrollView'ýn içindeki Content paneli
     public int itemsPerRow = 2; // Her satýrdaki item sayýsý
     public float itemSpacing = 10f; // Item'lar arasýndaki boþluk
+    public Vector2 padding = new Vector2(10f, 10f); // Content panelin üst ve sol kenar boþluklarý
 
     void Start()
     {
@@ -32,8 +33,11 @@ public class InformationUISystem : MonoBehaviour
 
         int rows = Mathf.CeilToInt((float)itemCount / itemsPerRow);
 
+        // Content panelinin yüksekliðini hesapla
+        float contentHeight = (itemHeight + itemSpacing) * rows - itemSpacing + padding.y * 2;
+
         // Content panelinin boyutlarýný ayarla
-        contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, (itemHeight + itemSpacing) * rows - itemSpacing);
+        contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, contentHeight);
 
         for (int i = 0; i < itemCount; i++)
         {
@@ -43,10 +47,14 @@ public class InformationUISystem : MonoBehaviour
             int row = i / itemsPerRow;
             int column = i % itemsPerRow;
 
+            // Sol üstten dizmeye baþla
             itemRect.anchoredPosition = new Vector2(
-                column * (itemWidth + itemSpacing),
-                -row * (itemHeight + itemSpacing)
+                padding.x + column * (itemWidth + itemSpacing),
+                -padding.y - row * (itemHeight + itemSpacing)
             );
+
+            // Pivot noktasýný ayarla
+            itemRect.pivot = new Vector2(0, 1);
         }
     }
 }

@@ -8,14 +8,32 @@ public class InteractiveManager : MonoSingleton<InteractiveManager>
     [SerializeField] List<GameObject> panels = new List<GameObject>();
     [SerializeField] GameObject _camera, cameraPos, targetPos;
     [SerializeField] Button closeButton;
+    [SerializeField] UnityEngine.Animations.Rigging.ChainIKConstraint chainIK;
     GameObject target;
+    bool pickUpBool = false;
+
+
     private void Start()
     {
         closeButton.onClick.AddListener(PerspectiveOff);
     }
+    private void Update()
+    {
+        if (pickUpBool && chainIK.weight != 0)
+        {
+            chainIK.weight = 0;
+            if (chainIK.weight == 0)
+                pickUpBool = false;
+        }
+
+    }
+
 
     public void SetTarget(GameObject tempTarget)
     {
+        ChainIKOn();
+        CharacterAnim.Instance.SetPickUpTraget(tempTarget);
+        CharacterMove.Instance.NavmeshAgentOff();
         target = tempTarget;
     }
 
@@ -45,6 +63,7 @@ public class InteractiveManager : MonoSingleton<InteractiveManager>
 
     public void PerspectiveOn()
     {
+        ChainIKOff();
         CameraTargetFollow.Instance.enabled = false;
         CharacterMove.Instance.enabled = false;
         closeButton.gameObject.SetActive(true);
@@ -54,4 +73,14 @@ public class InteractiveManager : MonoSingleton<InteractiveManager>
     {
         panels[panelCount].SetActive(true);
     }
+
+    private void ChainIKOff()
+    {
+        pickUpBool = true;
+    }
+    private void ChainIKOn()
+    {
+        chainIK.weight = 1;
+    }
+
 }

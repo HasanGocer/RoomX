@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Animations.Rigging;
 
 public class CharacterAnim : MonoSingleton<CharacterAnim>
 {
@@ -14,6 +15,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
     [SerializeField] Animator characterAnim;
     string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", PickUpName = "IsPickUp", GateOpenName = "IsGateOpen", GateCloseName = "IsGateClose";
+    [SerializeField] GameObject pickUpTarget;
 
     public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, float speedFactor, UnityAction FinishFunc)
     {
@@ -41,6 +43,13 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         tempObject.SetActive(false);
 
         FinishFunc();
+    }
+
+    public void SetPickUpTraget(GameObject target)
+    {
+        bool tempBool = true;
+
+        MoveMechanics.Instance.MoveStabile(pickUpTarget, target.transform.position, 1, ref tempBool);
     }
 
 
@@ -91,18 +100,18 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         characterAnim.SetBool(idleName, true);
     }
 
-     private void TurnLeftAnim()
-     {
-         AllAnimOff();
-         characterAnim.SetBool(turnLeftName, true);
+    private void TurnLeftAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(turnLeftName, true);
         characterAnim.SetBool(walkName, true);
-     }
-     private void TurnRightAnim()
-     {
-         AllAnimOff();
-         characterAnim.SetBool(turnRightName, true);
+    }
+    private void TurnRightAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(turnRightName, true);
         characterAnim.SetBool(walkName, true);
-     }
+    }
 
     private void AllAnimOff()
     {

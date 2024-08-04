@@ -38,10 +38,11 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                         agent.velocity = Vector3.zero;
                         agent.isStopped = true;
 
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
+                        if (distance > interactionDistance)
+                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
                         {
-                            Vector3 tempPos = new Vector3(interactiveObject.transform.position.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, interactiveObject.transform.position.z);
-                            agent.SetDestination(tempPos);
+                            agent.SetDestination(interactiveObject.transform.position);
                             CharacterAnim.Instance.WalkAnim();
                             agent.isStopped = false;
                         }));
@@ -52,10 +53,12 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                         agent.velocity = Vector3.zero;
                         agent.isStopped = true;
 
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+
+                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
+                        if (distance > interactionDistance)
+                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
                         {
-                            Vector3 tempPos = new Vector3(interactiveObject.transform.position.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, interactiveObject.transform.position.z);
-                            agent.SetDestination(tempPos);
+                            agent.SetDestination(interactiveObject.transform.position);
                             CharacterAnim.Instance.WalkAnim();
                             agent.isStopped = false;
                         }));
@@ -68,8 +71,7 @@ public class CharacterMove : MonoSingleton<CharacterMove>
 
                         StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, hit.point, TurnSpeed, () =>
                         {
-                            Vector3 tempPos = new Vector3(hit.point.x, PlaneManager.Instance.GetTargetPlane().transform.position.y, hit.point.z);
-                            agent.SetDestination(tempPos);
+                            agent.SetDestination(hit.point);
                             CharacterAnim.Instance.WalkAnim();
                             agent.isStopped = false;
                         }));
@@ -83,6 +85,14 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     {
         return isMove;
     }
+    public void NavmeshAgentOff()
+    {
+        agent.enabled = false;
+    }
+    public void NavmeshAgentOn()
+    {
+        agent.enabled = true;
+    }
 
     private void InteractiveFinish()
     {
@@ -95,14 +105,13 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                 agent.velocity = Vector3.zero;
                 agent.isStopped = true;
                 SelectObject();
-                interactiveObject = null;
             }
         }
     }
 
     private void SelectObject()
     {
-        if (interactiveObject.CompareTag(floorName))
+        if (interactiveObject.CompareTag(interactiveName))
         {
             CharacterAnim.Instance.PickUpAnim();
             InteractiveManager.Instance.SetTarget(interactiveObject);
