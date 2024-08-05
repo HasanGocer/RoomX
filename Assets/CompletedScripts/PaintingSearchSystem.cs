@@ -22,6 +22,7 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
         FollowMouseAndScale followMouseAndScale = target.GetComponent<FollowMouseAndScale>();
         bool tempBool = true;
 
+        CharacterAnim.Instance.IdleAnim();
         SetCamera(followMouseAndScale, false, true, false);
 
 

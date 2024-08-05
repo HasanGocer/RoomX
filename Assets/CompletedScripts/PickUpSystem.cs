@@ -16,6 +16,7 @@ public class PickUpSystem : MonoSingleton<PickUpSystem>
 
     public void PickUpStart(GameObject tempTarget)
     {
+        CharacterAnim.Instance.PickUpAnim();
         InteractiveManager.Instance.ChainIKOn();
         InteractiveManager.Instance.PerspectiveCameraOff();
         CharacterAnim.Instance.PickUpTargetMove(tempTarget);
@@ -34,6 +35,7 @@ public class PickUpSystem : MonoSingleton<PickUpSystem>
         interactiveID.SetScale();
         CharacterMove.Instance.NavmeshAgentOn();
         InteractiveManager.Instance.ChainIKOff();
+        CharacterAnim.Instance.ResetPickUpTarget();
 
         MoveMechanics.Instance.MoveLerp(pickUpItem, targetPos.transform.position, 1, ref tempBool);
         MoveMechanics.Instance.MoveLerp(_camera, cameraPos.transform.position, 1, ref tempBool);

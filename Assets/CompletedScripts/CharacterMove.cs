@@ -72,6 +72,18 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                                 LastMove();
                             }));
                     }
+                    else if (hit.collider.gameObject.CompareTag(DoorName))
+                    {
+                        ResetMove(hit.collider.gameObject);
+
+                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
+                        if (distance > interactionDistance)
+                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+                            {
+                                agent.SetDestination(interactiveObject.transform.position);
+                                LastMove();
+                            }));
+                    }
                     else if (hit.collider.gameObject.CompareTag(floorName))
                     {
                         ResetMove(null);
@@ -122,16 +134,13 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     private void SelectObject()
     {
         if (interactiveObject.CompareTag(interactiveName))
-        {
-            CharacterAnim.Instance.PickUpAnim();
             PickUpSystem.Instance.PickUpStart(interactiveObject);
-        }
         else if (interactiveObject.CompareTag(paintingName))
-        {
-            CharacterAnim.Instance.IdleAnim();
             PaintingSearchSystem.Instance.StartPaintingSearch(interactiveObject);
-        }
-            interactiveObject = null;
+        else if (interactiveObject.CompareTag(DoorName))
+            DoorManager.Instance.StartDoorIn(gameObject, interactiveObject);
+
+        interactiveObject = null;
     }
 
     private bool IsPointerOverUIElement()
@@ -154,5 +163,4 @@ public class CharacterMove : MonoSingleton<CharacterMove>
         CharacterAnim.Instance.WalkAnim();
         agent.isStopped = false;
     }
-
 }

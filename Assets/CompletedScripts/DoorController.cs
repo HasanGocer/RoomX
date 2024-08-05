@@ -3,14 +3,8 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     [SerializeField] GameObject doorCharacterPos;
+    [SerializeField] GameObject doorHandPos;
 
     public GameObject GetDoorCharacterPos() { return doorCharacterPos; }
-
-    public void DoorOpen()
-    {
-        InteractiveManager.Instance.ChainIKOn();
-        InteractiveManager.Instance.PerspectiveCameraOff();
-    }
-
-
+    public GameObject GetDoorHandPos() { return doorHandPos; }
 }
