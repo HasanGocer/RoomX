@@ -11,7 +11,6 @@ public class CameraTargetFollow : MonoSingleton<CameraTargetFollow>
     [SerializeField] float mouseSensitivity = 100.0f;
 
     private float currentYaw = 0.0f;
-    private float mouseYaw = 0.0f;
 
     void LateUpdate()
     {

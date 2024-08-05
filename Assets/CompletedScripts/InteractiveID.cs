@@ -8,32 +8,16 @@ public class InteractiveID : MonoBehaviour
     [SerializeField] ObjectRotation objectRotation;
     [SerializeField] Vector3 tempMiniScale;
 
+    public int GetInteractiveID() { return interactiveID; }
+    public ObjectRotation GetObjectRotation() { return objectRotation; }
+    public void SetScale() { transform.localScale = tempMiniScale; }
+
     private void Start()
     {
-        CheckedOnline();
+        CheckedObjectActive();
     }
 
-
-    public void SetScale()
-    {
-        transform.localScale = tempMiniScale;
-    }
-
-    public int GetInteractiveID()
-    {
-        return interactiveID;
-    }
-
-    public ObjectRotation GetObjectRotation()
-    {
-        return objectRotation;
-    }
-    public void TouchObject()
-    {
-        InteractiveManager.Instance.PanelOpen(interactiveID);
-    }
-
-    private void CheckedOnline()
+    private void CheckedObjectActive()
     {
         if (EnvanterManager.Instance.envanter.itemChecked[interactiveID]) gameObject.SetActive(false);
     }

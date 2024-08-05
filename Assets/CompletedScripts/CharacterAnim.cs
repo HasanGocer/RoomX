@@ -14,8 +14,9 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
 
     [SerializeField] Animator characterAnim;
-    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", PickUpName = "IsPickUp", GateOpenName = "IsGateOpen", GateCloseName = "IsGateClose";
+    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", pickUpName = "IsPickUp", doorInName = "IsDoorIn";
     [SerializeField] GameObject pickUpTarget;
+    [SerializeField] GameObject pickUpTargetPos;
 
     public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, float speedFactor, UnityAction FinishFunc)
     {
@@ -45,11 +46,16 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         FinishFunc();
     }
 
-    public void SetPickUpTraget(GameObject target)
+    public void PickUpTargetMove(GameObject target)
     {
         bool tempBool = true;
 
         MoveMechanics.Instance.MoveStabile(pickUpTarget, target.transform.position, 1, ref tempBool);
+    }
+    public void ResetPickUpTarget()
+    {
+        pickUpTarget.transform.position = pickUpTargetPos.transform.position;
+        pickUpTarget.transform.rotation = pickUpTargetPos.transform.rotation;
     }
 
 
@@ -84,19 +90,13 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     public void PickUpAnim()
     {
         AllAnimOff();
-        characterAnim.SetBool(PickUpName, true);
+        characterAnim.SetBool(pickUpName, true);
         characterAnim.SetBool(idleName, true);
     }
-    public void GateOpenAnim()
+    public void DoorInAnim()
     {
         AllAnimOff();
-        characterAnim.SetBool(GateOpenName, true);
-        characterAnim.SetBool(idleName, true);
-    }
-    public void GateCloseAnim()
-    {
-        AllAnimOff();
-        characterAnim.SetBool(GateCloseName, true);
+        characterAnim.SetBool(doorInName, true);
         characterAnim.SetBool(idleName, true);
     }
 
@@ -117,10 +117,9 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     {
         characterAnim.SetBool(idleName, false);
         characterAnim.SetBool(walkName, false);
-        characterAnim.SetBool(PickUpName, false);
+        characterAnim.SetBool(pickUpName, false);
         characterAnim.SetBool(turnRightName, false);
         characterAnim.SetBool(turnLeftName, false);
-        characterAnim.SetBool(GateCloseName, false);
-        characterAnim.SetBool(GateOpenName, false);
+        characterAnim.SetBool(doorInName, false);
     }
 }

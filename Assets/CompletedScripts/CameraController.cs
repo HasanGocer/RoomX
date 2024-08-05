@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class CameraController : MonoSingleton<CameraController>
 {
-    [SerializeField] float moveSpeed = 10.0f; // Kameranýn hareket hýzý
-    Canvas worldSpaceCanvas; // World Space özellikli Canvas
+    //Tablolarýn kamerasýnýn  scripti
+
+    [SerializeField] float moveSpeed = 10.0f;
+    Canvas worldSpaceCanvas; 
     private RectTransform canvasRectTransform;
 
     void Start()

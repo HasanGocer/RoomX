@@ -20,9 +20,10 @@ public class PaintingCompetedSystem : MonoSingleton<PaintingCompetedSystem>
     private void ExitButtonFunc()
     {
         exitButton.gameObject.SetActive(false);
-        CameraTargetFollow.Instance.enabled = true;
         CameraController.Instance.enabled = false;
         CharacterMove.Instance.gameObject.SetActive(true);
+
+        InteractiveManager.Instance.PerspectiveCameraOn();
     }
 
 

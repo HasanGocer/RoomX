@@ -14,11 +14,13 @@ public class FollowMouseAndScale : MonoBehaviour
     private Camera mainCamera;
     private HashSet<Button> clickedButtons = new HashSet<Button>();
 
+    public Canvas GetCanvas() { return canvas; }
+    public GameObject GetCameraPos() { return cameraPos; }
+
     private void Start()
     {
         mainCamera = Camera.main;
 
-        // Butonlara týklama olaylarýný ekle
         foreach (var button in buttons)
         {
             button.onClick.AddListener(() => OnButtonClicked(button));
@@ -37,7 +39,6 @@ public class FollowMouseAndScale : MonoBehaviour
 
     void Update()
     {
-        // Fare pozisyonunu dünya uzayýna dönüþtürmek için raycast kullan
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -73,11 +74,8 @@ public class FollowMouseAndScale : MonoBehaviour
         clickedButtons.Add(clickedButton);
         UpdateUIForButton(clickedButton);
 
-        // Eðer tüm butonlar týklanmýþsa belirli bir fonksiyonu çalýþtýr
         if (clickedButtons.Count == buttons.Count)
-        {
             AllButtonsClicked();
-        }
     }
 
     private void UpdateUIForButton(Button clickedButton)
@@ -85,29 +83,15 @@ public class FollowMouseAndScale : MonoBehaviour
         for (int i = 0; i < buttons.Count; i++)
             if (buttons[i] == clickedButton)
                 activeObjects[i].gameObject.SetActive(true);
-        // Týklanan butonun bölgesinde gösterilecek farklý image
-        // Bu kýsmý ihtiyacýnýza göre özelleþtirin
-        RectTransform zone = clickedButton.GetComponent<RectTransform>();
-        // Örneðin, bir image deðiþtirme iþlemi yapabilirsiniz
-        // Image img = zone.GetComponent<Image>();
-        // img.sprite = someOtherSprite;
     }
 
     private void AllButtonsClicked()
     {
-        PaintingSearchSystem.Instance.CameraOff(gameObject);
+        PaintingSearchSystem.Instance.FinishPaintingSearch(gameObject);
+        PaintingManager.Instance.PaintingAdd(gameObject);
         foreach (GameObject item in activeObjects)
             item.SetActive(false);
-        PaintingManager.Instance.PaintingAdd(gameObject);
     }
 
-    public Canvas GetCanvas()
-    {
-        return canvas;
-    }
 
-    public GameObject GetCameraPos()
-    {
-        return cameraPos;
-    }
 }

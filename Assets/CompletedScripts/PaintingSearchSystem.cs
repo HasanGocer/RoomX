@@ -10,49 +10,26 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
     [SerializeField] float minScale = 0.5f;
     [SerializeField] float maxScale = 1;
 
-    public float GetScaleDistance()
-    {
-        return scaleDistance;
-    }
-    public RectTransform GetTargetObject()
-    {
-        return targetObject;
-    }
-    public float GetMinScale()
-    {
-        return minScale;
-    }
-    public float GetMaxScale()
-    {
-        return maxScale;
-    }
-    public void targetObjectOn()
-    {
-        targetObject.gameObject.SetActive(true);
-    }
-    public void targetObjectOff()
-    {
-        targetObject.gameObject.SetActive(false);
-    }
-    public void SetCamera(GameObject target)
+    public float GetScaleDistance() { return scaleDistance; }
+    public RectTransform GetTargetObject() { return targetObject; }
+    public float GetMinScale() { return minScale; }
+    public float GetMaxScale() { return maxScale; }
+    public void targetObjectOn() { targetObject.gameObject.SetActive(true); }
+    public void targetObjectOff() { targetObject.gameObject.SetActive(false); }
+
+    public void StartPaintingSearch(GameObject target)
     {
         FollowMouseAndScale followMouseAndScale = target.GetComponent<FollowMouseAndScale>();
         bool tempBool = true;
 
-        CameraTargetFollow.Instance.enabled = false;
-        CameraController.Instance.enabled = true;
-        CharacterMove.Instance.gameObject.SetActive(false);
-        CameraController.Instance.SetWorldSpaceCanvas(followMouseAndScale.GetCanvas());
+        SetCamera(followMouseAndScale, false, true, false);
+
 
         if (PaintingManager.Instance.CheckPanitngs(target))
-        {
             PaintingCompetedSystem.Instance.ButtonActive();
-        }
         else
         {
-            CameraController.Instance.enabled = true;
             WorldSpaceButtonClick.Instance.enabled = true;
-
             followMouseAndScale.enabled = true;
         }
 
@@ -61,17 +38,24 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
 
     }
 
-    public void CameraOff(GameObject target)
+    public void FinishPaintingSearch(GameObject target)
     {
         FollowMouseAndScale followMouseAndScale = target.GetComponent<FollowMouseAndScale>();
 
-        CameraTargetFollow.Instance.enabled = true;
-        CameraController.Instance.enabled = false;
+        SetCamera(followMouseAndScale, true, false, true);
+
         WorldSpaceButtonClick.Instance.enabled = false;
-        CharacterMove.Instance.gameObject.SetActive(true);
-        CameraController.Instance.SetWorldSpaceCanvas(followMouseAndScale.GetCanvas());
         PaintingManager.Instance.PaintingAdd(target);
 
         followMouseAndScale.enabled = false;
+    }
+
+    private void SetCamera(FollowMouseAndScale followMouseAndScale, bool cameraTargetFollow, bool cameraController, bool characterMove)
+    {
+        CameraTargetFollow.Instance.enabled = cameraTargetFollow;
+        CameraController.Instance.enabled = cameraController;
+        CharacterMove.Instance.gameObject.SetActive(characterMove);
+
+        CameraController.Instance.SetWorldSpaceCanvas(followMouseAndScale.GetCanvas());
     }
 }

@@ -8,6 +8,7 @@ TagManager:
   - Floor
   - Wall
   - Painting
+  - Door
   layers:
   - Default
   - TransparentFX
