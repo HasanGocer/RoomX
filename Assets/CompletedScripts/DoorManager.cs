@@ -16,12 +16,24 @@ public class DoorManager : MonoSingleton<DoorManager>
 
         InteractiveManager.Instance.PerspectiveCameraOff();
 
-        MoveMechanics.Instance.MoveLerpQuaternion(character, doorController.GetDoorCharacterPos().transform.rotation, 1, ref tempBool);
+        MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterPos().transform.localRotation, 3, ref tempBool);
         MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterPos().transform.position, 1, ref tempBool, () =>
              {
                  InteractiveManager.Instance.ChainIKOn();
+                 CharacterMove.Instance.NavmeshAgentOff();
                  CharacterAnim.Instance.PickUpTargetMove(doorController.GetDoorHandPos());
                  CharacterAnim.Instance.DoorInAnim();
              });
+    }
+
+    public void FinishDoorClipTime()
+    {
+        CharacterAnim.Instance.ResetPickUpTarget();
+        InteractiveManager.Instance.PerspectiveCameraOn();
+        InteractiveManager.Instance.ChainIKOff();
+        CharacterMove.Instance.NavmeshAgentOn();
+
+
+
     }
 }
