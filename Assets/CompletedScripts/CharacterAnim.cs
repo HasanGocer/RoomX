@@ -27,8 +27,8 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         GameObject finishPosGO = new GameObject();
 
         SetAngle(ref finishPosGO, ref tempObject, obj, finishPos);
-        if (ChangeWay(tempObject.transform, finishPosGO.transform) == Way.left) TurnLeftAnim();
-        else TurnRightAnim();
+        if (ChangeWay(tempObject.transform, finishPosGO.transform) == Way.left) TurnRightAnim();
+        else TurnLeftAnim();
 
         Quaternion startRotation = Quaternion.Euler(0, obj.transform.rotation.eulerAngles.y, 0);
         Quaternion targetRotation = Quaternion.Euler(0, tempObject.transform.rotation.eulerAngles.y, 0);
@@ -43,6 +43,8 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         finishPosGO.SetActive(false);
         tempObject.SetActive(false);
 
+
+        WalkAnim();
         FinishFunc();
     }
 
@@ -104,13 +106,11 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     {
         AllAnimOff();
         characterAnim.SetBool(turnLeftName, true);
-        characterAnim.SetBool(walkName, true);
     }
     private void TurnRightAnim()
     {
         AllAnimOff();
         characterAnim.SetBool(turnRightName, true);
-        characterAnim.SetBool(walkName, true);
     }
 
     private void AllAnimOff()

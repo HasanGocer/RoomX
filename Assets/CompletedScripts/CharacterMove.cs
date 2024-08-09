@@ -13,7 +13,7 @@ public class CharacterMove : MonoSingleton<CharacterMove>
     [SerializeField] string paintingName;
     [SerializeField] string DoorName;
     [SerializeField] float interactionDistance = 1.0f;
-    [SerializeField] int TurnSpeed = 4;
+    [SerializeField] float TurnSpeed = 4;
     [SerializeField] float navMeshSampleDistance = 1.0f;
     bool isMove = false;
     bool isPickUp = false;
