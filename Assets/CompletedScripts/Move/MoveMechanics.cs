@@ -23,11 +23,11 @@ public class MoveMechanics : MonoSingleton<MoveMechanics>
     {
         StartCoroutine(MoveLerpIEnumLocalQuaternion(obj, finishPos, speedFactor, isMove));
     }
-    public void MoveStabile(GameObject obj, Vector3 finishPos, int speedFactor, ref bool isMove, UnityAction FinishFunc)
+    public void MoveStabile(GameObject obj, Vector3 finishPos, float speedFactor, ref bool isMove, UnityAction FinishFunc)
     {
         StartCoroutine(MoveStabileIEnum(obj, finishPos, speedFactor, isMove, FinishFunc));
     }
-    public void MoveStabile(GameObject obj, Vector3 finishPos, int speedFactor, ref bool isMove)
+    public void MoveStabile(GameObject obj, Vector3 finishPos, float speedFactor, ref bool isMove)
     {
         StartCoroutine(MoveStabileIEnum(obj, finishPos, speedFactor, isMove));
     }
@@ -68,7 +68,7 @@ public class MoveMechanics : MonoSingleton<MoveMechanics>
         }
     }
 
-    private IEnumerator MoveStabileIEnum(GameObject obj, Vector3 finishPos, int speedFactor, bool isMove, UnityAction FinishFunc)
+    private IEnumerator MoveStabileIEnum(GameObject obj, Vector3 finishPos, float speedFactor, bool isMove, UnityAction FinishFunc)
     {
         float lerpCount = 0;
         Vector3 startPos = obj.transform.position;
@@ -82,7 +82,7 @@ public class MoveMechanics : MonoSingleton<MoveMechanics>
 
         FinishFunc();
     }
-    private IEnumerator MoveStabileIEnum(GameObject obj, Vector3 finishPos, int speedFactor, bool isMove)
+    private IEnumerator MoveStabileIEnum(GameObject obj, Vector3 finishPos, float speedFactor, bool isMove)
     {
         float lerpCount = 0;
         Vector3 startPos = obj.transform.position;

@@ -17,6 +17,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", pickUpName = "IsPickUp", doorInName = "IsDoorIn";
     [SerializeField] GameObject pickUpTarget;
     [SerializeField] GameObject pickUpTargetPos;
+    [SerializeField] float HandIKSpeed;
 
     public IEnumerator TurnTargetIEnum(GameObject obj, Vector3 finishPos, float speedFactor, UnityAction FinishFunc)
     {
@@ -27,22 +28,33 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         GameObject finishPosGO = new GameObject();
 
         SetAngle(ref finishPosGO, ref tempObject, obj, finishPos);
-        if (ChangeWay(tempObject.transform, finishPosGO.transform) == Way.left) TurnRightAnim();
-        else TurnLeftAnim();
+        Way turnDirection = ChangeWay(tempObject.transform, finishPosGO.transform);
+
+        if (turnDirection == Way.left)
+            TurnLeftAnim();
+        else
+            TurnRightAnim();
 
         Quaternion startRotation = Quaternion.Euler(0, obj.transform.rotation.eulerAngles.y, 0);
         Quaternion targetRotation = Quaternion.Euler(0, tempObject.transform.rotation.eulerAngles.y, 0);
 
-        while (lerpCount < 1)
+        float angleDifference = Quaternion.Angle(startRotation, targetRotation);
+
+        float animationDuration = angleDifference / (80 * speedFactor);
+
+        characterAnim.speed = 1 / animationDuration;
+
+        while (lerpCount <= 1)
         {
-            lerpCount += Time.deltaTime * speedFactor;
-            obj.transform.rotation = Quaternion.Lerp(startRotation, targetRotation, lerpCount);
+            lerpCount += Time.deltaTime / animationDuration;
+            obj.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, lerpCount);
             yield return null;
         }
 
+        characterAnim.speed = 1;
+
         finishPosGO.SetActive(false);
         tempObject.SetActive(false);
-
 
         WalkAnim();
         FinishFunc();
@@ -52,7 +64,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
     {
         bool tempBool = true;
 
-        MoveMechanics.Instance.MoveStabile(pickUpTarget, target.transform.position, 1, ref tempBool);
+        MoveMechanics.Instance.MoveStabile(pickUpTarget, target.transform.position, HandIKSpeed, ref tempBool);
     }
     public void ResetPickUpTarget()
     {
@@ -76,8 +88,8 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         finishPosGO.transform.position = finishPos;
         tempObject.transform.position = obj.transform.position;
         tempObject.transform.LookAt(finishPosGO.transform);
+        tempObject.transform.position = new Vector3(tempObject.transform.position.x, obj.transform.position.y, tempObject.transform.position.z);
     }
-
 
     public void IdleAnim()
     {

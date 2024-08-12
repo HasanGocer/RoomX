@@ -48,49 +48,14 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                         return;
                     #endregion
 
-                    if (hit.collider.gameObject.CompareTag(paintingName))
-                    {
-                        ResetMove(hit.collider.gameObject);
-
-                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
-                        if (distance > interactionDistance)
-                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
-                            {
-                                agent.SetDestination(interactiveObject.transform.position);
-                                LastMove();
-                            }));
-                    }
-                    else if (hit.collider.gameObject.CompareTag(interactiveName))
-                    {
-                        ResetMove(hit.collider.gameObject);
-
-                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
-                        if (distance > interactionDistance)
-                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
-                            {
-                                agent.SetDestination(interactiveObject.transform.position);
-                                LastMove();
-                            }));
-                    }
-                    else if (hit.collider.gameObject.CompareTag(DoorName))
-                    {
-                        ResetMove(hit.collider.gameObject);
-
-                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
-                        if (distance > interactionDistance)
-                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
-                            {
-                                agent.SetDestination(interactiveObject.transform.position);
-                                LastMove();
-                            }));
-                    }
-                    else if (hit.collider.gameObject.CompareTag(floorName))
+                    if (hit.collider.gameObject.CompareTag(floorName))
                     {
                         ResetMove(null);
+                        SaveHit(hit.point);
 
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, targetPosition, TurnSpeed, () =>
+                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
                         {
-                            agent.SetDestination(targetPosition);
+                            agent.SetDestination(interactiveObject.transform.position);
                             LastMove();
                         }));
                     }
@@ -123,24 +88,13 @@ public class CharacterMove : MonoSingleton<CharacterMove>
             float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
             if (distance <= interactionDistance)
             {
-                isPickUp = true;
+                agent.ResetPath();
                 agent.velocity = Vector3.zero;
-                agent.isStopped = true;
-                SelectObject();
+                isPickUp = true;
+                CharacterAnim.Instance.IdleAnim();
+                interactiveObject = null;
             }
         }
-    }
-
-    private void SelectObject()
-    {
-        if (interactiveObject.CompareTag(interactiveName))
-            PickUpSystem.Instance.PickUpStart(interactiveObject);
-        else if (interactiveObject.CompareTag(paintingName))
-            PaintingSearchSystem.Instance.StartPaintingSearch(interactiveObject);
-        else if (interactiveObject.CompareTag(DoorName))
-            DoorManager.Instance.StartDoorIn(gameObject, interactiveObject);
-
-        interactiveObject = null;
     }
 
     private bool IsPointerOverUIElement()
@@ -149,14 +103,22 @@ public class CharacterMove : MonoSingleton<CharacterMove>
         eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        for (int i = 0; i < results.Count; i++)
+            if (results[i].gameObject.CompareTag("Clear UI")) results.RemoveAt(i);
         return results.Count > 0;
     }
 
+    private void SaveHit(Vector3 hit)
+    {
+        GameObject hitGO = new GameObject("hit");
+        hitGO.transform.position = hit;
+        interactiveObject = hitGO;
+    }
     private void ResetMove(GameObject tempInteractiveObject)
     {
         interactiveObject = tempInteractiveObject;
+        agent.ResetPath();
         agent.velocity = Vector3.zero;
-        agent.isStopped = true;
     }
     private void LastMove()
     {

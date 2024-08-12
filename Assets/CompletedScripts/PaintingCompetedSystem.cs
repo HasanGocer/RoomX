@@ -19,9 +19,13 @@ public class PaintingCompetedSystem : MonoSingleton<PaintingCompetedSystem>
 
     private void ExitButtonFunc()
     {
+        PaintingSearchSystem.Instance.GetTargetObject().parent.parent.gameObject.GetComponent<FollowMouseAndScale>().enabled = false;
         exitButton.gameObject.SetActive(false);
+        CameraTargetFollow.Instance.enabled = true;
         CameraController.Instance.enabled = false;
         CharacterMove.Instance.gameObject.SetActive(true);
+        ObjectTooltip.Instance.enabled = true;
+        WorldSpaceButtonClick.Instance.enabled = false;
 
         InteractiveManager.Instance.PerspectiveCameraOn();
     }

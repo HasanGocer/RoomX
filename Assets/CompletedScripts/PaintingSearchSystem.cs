@@ -23,12 +23,11 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
         bool tempBool = true;
 
         CharacterAnim.Instance.IdleAnim();
-        SetCamera(followMouseAndScale, false, true, false);
+        SetCamera(followMouseAndScale, false, false, true, false);
+        PaintingCompetedSystem.Instance.ButtonActive();
 
 
-        if (PaintingManager.Instance.CheckPanitngs(target))
-            PaintingCompetedSystem.Instance.ButtonActive();
-        else
+        if (!PaintingManager.Instance.CheckPanitngs(target))
         {
             WorldSpaceButtonClick.Instance.enabled = true;
             followMouseAndScale.enabled = true;
@@ -43,7 +42,7 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
     {
         FollowMouseAndScale followMouseAndScale = target.GetComponent<FollowMouseAndScale>();
 
-        SetCamera(followMouseAndScale, true, false, true);
+        SetCamera(followMouseAndScale, true, true, false, true);
 
         WorldSpaceButtonClick.Instance.enabled = false;
         PaintingManager.Instance.PaintingAdd(target);
@@ -51,11 +50,12 @@ public class PaintingSearchSystem : MonoSingleton<PaintingSearchSystem>
         followMouseAndScale.enabled = false;
     }
 
-    private void SetCamera(FollowMouseAndScale followMouseAndScale, bool cameraTargetFollow, bool cameraController, bool characterMove)
+    private void SetCamera(FollowMouseAndScale followMouseAndScale, bool cameraTargetFollow, bool objectTooltip, bool cameraController, bool characterMove)
     {
         CameraTargetFollow.Instance.enabled = cameraTargetFollow;
         CameraController.Instance.enabled = cameraController;
         CharacterMove.Instance.gameObject.SetActive(characterMove);
+        ObjectTooltip.Instance.enabled = objectTooltip;
 
         CameraController.Instance.SetWorldSpaceCanvas(followMouseAndScale.GetCanvas());
     }

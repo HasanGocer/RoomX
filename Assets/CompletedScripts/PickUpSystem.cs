@@ -1,56 +1,47 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class PickUpSystem : MonoSingleton<PickUpSystem>
 {
-    [SerializeField] GameObject _camera, cameraPos, targetPos;
+    [SerializeField] GameObject character, _camera, cameraPos;
     [SerializeField] Button closeButton;
     GameObject pickUpItem;
 
-    private void Start()
-    {
-        closeButton.onClick.AddListener(AddItem);
-    }
-
     public void PickUpStart(GameObject tempTarget)
     {
-        CharacterAnim.Instance.PickUpAnim();
-        InteractiveManager.Instance.ChainIKOn();
+        closeButton.onClick.AddListener(AddItem);
         InteractiveManager.Instance.PerspectiveCameraOff();
-        CharacterAnim.Instance.PickUpTargetMove(tempTarget);
         CharacterMove.Instance.NavmeshAgentOff();
+        ItemAddSystem.Instance.enabled = true;
         pickUpItem = tempTarget;
+        PickUpSystem.Instance.PickUpFinish();
+        CharacterMove.Instance.gameObject.SetActive(false);
     }
 
     public void PickUpFinish()
     {
         InteractiveID interactiveID = pickUpItem.GetComponent<InteractiveID>();
-        bool tempBool = true;
 
         closeButton.gameObject.SetActive(true);
-        interactiveID.GetObjectRotation().enabled = true;
+        // interactiveID.GetObjectRotation().enabled = true;
 
-        interactiveID.SetScale();
+        // interactiveID.SetScale();
         CharacterMove.Instance.NavmeshAgentOn();
-        InteractiveManager.Instance.ChainIKOff();
-        CharacterAnim.Instance.ResetPickUpTarget();
 
-        MoveMechanics.Instance.MoveLerp(pickUpItem, targetPos.transform.position, 1, ref tempBool);
-        MoveMechanics.Instance.MoveLerp(_camera, cameraPos.transform.position, 1, ref tempBool);
-        MoveMechanics.Instance.MoveLerpQuaternion(_camera, cameraPos.transform.rotation, 1, ref tempBool);
+        character.transform.LookAt(pickUpItem.transform);
+        _camera.transform.position = cameraPos.transform.position;
+        _camera.transform.rotation = cameraPos.transform.rotation;
     }
     private void AddItem()
     {
-        InteractiveID interactiveID = pickUpItem.GetComponent<InteractiveID>();
-
-        EnvanterManager.Instance.ItemAdd(interactiveID);
         InteractiveManager.Instance.PerspectiveCameraOn();
+        ItemAddSystem.Instance.enabled = false;
 
-
-        interactiveID.GetObjectRotation().enabled = false;
         closeButton.gameObject.SetActive(false);
-        pickUpItem.SetActive(false);
+        CharacterMove.Instance.gameObject.SetActive(true);
     }
 }
