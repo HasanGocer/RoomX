@@ -25,9 +25,12 @@ public class CameraTargetFollow : MonoSingleton<CameraTargetFollow>
         float yaw = (horizontalInput * rotationSpeed + mouseInput * mouseSensitivity) * Time.deltaTime;
         currentYaw += yaw;
 
-        Vector3 desiredPosition = target.position + Quaternion.Euler(0, currentYaw, 0) * offset;
+        // Scroll deðerine göre kameranýn hedefe olan uzaklýðýný ayarla
+        Vector3 scrollAdjustedOffset = offset * ScrollUpDown.Instance.GetScrollValue();
+
+        Vector3 desiredPosition = target.position + Quaternion.Euler(0, currentYaw, 0) * scrollAdjustedOffset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        transform.position = smoothedPosition * ScrollUpDown.Instance.GetScrollValue();
+        transform.position = smoothedPosition;
 
         transform.LookAt(target);
     }

@@ -54,7 +54,7 @@ public class InteractWithObject : MonoBehaviour
         }
         else if (triggerObject.CompareTag(DoorName))
         {
-            DoorManager.Instance.StartDoorIn(gameObject, triggerObject);
+            DoorManager.Instance.StartDoorIn(triggerObject);
             ÝnterctiveOff();
         }
     }

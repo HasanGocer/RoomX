@@ -5,25 +5,45 @@ using UnityEngine;
 public class DoorManager : MonoSingleton<DoorManager>
 {
     [SerializeField] AnimationClip doorClip;
-
+    [SerializeField] GameObject character;
 
     public float GetDoorClipTime() { return doorClip.length; }
 
-    public void StartDoorIn(GameObject character, GameObject door)
+    public void StartDoorIn(GameObject door)
     {
         DoorController doorController = door.GetComponent<DoorController>();
         bool tempBool = true;
 
         InteractiveManager.Instance.PerspectiveCameraOff();
+        CharacterMove.Instance.NavmeshAgentOff();
+        CharacterAnim.Instance.WalkAnim();
 
-        MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterPos().transform.localRotation, 3, ref tempBool);
-        MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterPos().transform.position, 1, ref tempBool, () =>
-             {
-                 InteractiveManager.Instance.ChainIKOn();
-                 CharacterMove.Instance.NavmeshAgentOff();
-                 CharacterAnim.Instance.PickUpTargetMove(doorController.GetDoorHandPos());
-                 CharacterAnim.Instance.DoorInAnim();
-             });
+        float distanceToA = Vector3.Distance(character.transform.position, doorController.GetDoorCharacterInPos().transform.position);
+
+        float distanceToB = Vector3.Distance(character.transform.position, doorController.GetDoorCharacterOutPos().transform.position);
+
+        if (distanceToA < distanceToB)
+        {
+            MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterInPos().transform.localRotation, 3, ref tempBool);
+            MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterInPos().transform.position, 1, ref tempBool, () =>
+            {
+                InteractiveManager.Instance.ChainIKOn();
+                CharacterAnim.Instance.PickUpTargetMove(doorController.GetDoorHandInPos());
+                CharacterAnim.Instance.DoorInAnim();
+            });
+        }
+        else if (distanceToA > distanceToB)
+        {
+            MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterOutPos().transform.localRotation, 3, ref tempBool);
+            MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterOutPos().transform.position, 1, ref tempBool, () =>
+            {
+                InteractiveManager.Instance.ChainIKOn();
+                CharacterAnim.Instance.PickUpTargetMove(doorController.GetDoorHandOutPos());
+                CharacterAnim.Instance.DoorOutAnim();
+            });
+        }
+
+        
     }
 
     public void FinishDoorClipTime()
@@ -32,8 +52,6 @@ public class DoorManager : MonoSingleton<DoorManager>
         InteractiveManager.Instance.PerspectiveCameraOn();
         InteractiveManager.Instance.ChainIKOff();
         CharacterMove.Instance.NavmeshAgentOn();
-
-
-
+        CharacterAnim.Instance.IdleAnim();
     }
 }

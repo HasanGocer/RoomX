@@ -14,7 +14,7 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
 
 
     [SerializeField] Animator characterAnim;
-    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", pickUpName = "IsPickUp", doorInName = "IsDoorIn";
+    string idleName = "IsIdle", walkName = "IsWalk", turnRightName = "IsTurnRight", turnLeftName = "IsTurnLeft", pickUpName = "IsPickUp", doorInName = "IsDoorIn", doorOutName = "IsDoorOut";
     [SerializeField] GameObject pickUpTarget;
     [SerializeField] GameObject pickUpTargetPos;
     [SerializeField] float HandIKSpeed;
@@ -113,7 +113,12 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         characterAnim.SetBool(doorInName, true);
         characterAnim.SetBool(idleName, true);
     }
-
+    public void DoorOutAnim()
+    {
+        AllAnimOff();
+        characterAnim.SetBool(doorOutName, true);
+        characterAnim.SetBool(idleName, true);
+    }
     private void TurnLeftAnim()
     {
         AllAnimOff();
@@ -133,5 +138,6 @@ public class CharacterAnim : MonoSingleton<CharacterAnim>
         characterAnim.SetBool(turnRightName, false);
         characterAnim.SetBool(turnLeftName, false);
         characterAnim.SetBool(doorInName, false);
+        characterAnim.SetBool(doorOutName, false);
     }
 }
