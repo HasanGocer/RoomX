@@ -2319,8 +2319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfc34ef1119894e43b6523e4d728a6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorClip: {fileID: -203655887218126122, guid: f7c2c8a3e8c092c4b93134e288eaf196,
-    type: 3}
   character: {fileID: 2642334217324745935}
 --- !u!114 &557315327
 MonoBehaviour:
@@ -2768,7 +2766,7 @@ Transform:
   m_GameObject: {fileID: 661960383}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -0.00363, y: -0.00626, z: 0}
+  m_LocalPosition: {x: 0.0016, y: -0.0083, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4234,7 +4232,7 @@ Transform:
   m_GameObject: {fileID: 1433606155}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.00363, y: 0.00628, z: 0}
+  m_LocalPosition: {x: -0.001, y: 0.00497, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5584,7 +5582,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 2
   m_Height: 3.83
   m_Direction: 1
   m_Center: {x: 0, y: 1.49, z: 0}
@@ -7633,6 +7631,7 @@ GameObject:
   - component: {fileID: 3474099901679882546}
   - component: {fileID: 3474099901679882547}
   - component: {fileID: 3474099901679882548}
+  - component: {fileID: 3474099901679882549}
   m_Layer: 0
   m_Name: "Kap\u0131"
   m_TagString: Door
@@ -7874,7 +7873,7 @@ Transform:
   m_GameObject: {fileID: 2642334217324745935}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -14.85, y: 0, z: 7.76}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7965,6 +7964,25 @@ MonoBehaviour:
   doorCharacterOutPos: {fileID: 661960383}
   doorHandInPos: {fileID: 2081191469}
   doorHandOutPos: {fileID: 2028153794}
+  doorHandInCountdown: 0.25
+  doorHandOutCountdown: 0.25
+--- !u!111 &3474099901679882549
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3113824643882348775}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: e0d314fc381532c4897eb807e1dee173, type: 2}
+  - {fileID: 7400000, guid: 0be03679334002941a031578d13a97b1, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!23 &3513842859535304890
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11004,7 +11022,7 @@ MonoBehaviour:
   interactiveName: Interactive
   paintingName: Painting
   DoorName: Door
-  interactionDistance: 2
+  interactionDistance: 3
   TurnSpeed: 1.7
   navMeshSampleDistance: 1
 --- !u!114 &8719118964313936915

@@ -53,11 +53,13 @@ public class CharacterMove : MonoSingleton<CharacterMove>
                         ResetMove(null);
                         SaveHit(hit.point);
 
-                        StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
-                        {
-                            agent.SetDestination(interactiveObject.transform.position);
-                            LastMove();
-                        }));
+                        float distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(interactiveObject.transform.position.x, 0, interactiveObject.transform.position.z));
+                        if (distance > interactionDistance)
+                            StartCoroutine(CharacterAnim.Instance.TurnTargetIEnum(this.gameObject, interactiveObject.transform.position, TurnSpeed, () =>
+                            {
+                                agent.SetDestination(interactiveObject.transform.position);
+                                LastMove();
+                            }));
                     }
                 }
             }
