@@ -12,7 +12,7 @@ public class DoorManager : MonoSingleton<DoorManager>
         Animation doorAnimation = door.GetComponent<Animation>();
         bool tempBool = true;
 
-        InteractiveManager.Instance.PerspectiveCameraOff();
+        CharacterMove.Instance.enabled = false;
         CharacterMove.Instance.NavmeshAgentOff();
         CharacterAnim.Instance.WalkAnim();
 
@@ -22,20 +22,28 @@ public class DoorManager : MonoSingleton<DoorManager>
 
         if (distanceToA < distanceToB)
         {
-            MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterInPos().transform.localRotation, 3, ref tempBool);
+            character.transform.LookAt(doorController.GetDoorCharacterInPos().transform);
             MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterInPos().transform.position, 1, ref tempBool, () =>
             {
-                CharacterAnim.Instance.DoorInAnim();
-                StartCoroutine(DoorAnim(doorAnimation, "DoorIn", doorController.GetDoorHandInCountdown()));
+                MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterInPos().transform.localRotation, 1, ref tempBool, () =>
+                {
+                    CharacterAnim.Instance.IdleAnim();
+                    CharacterAnim.Instance.DoorInAnim();
+                    StartCoroutine(DoorAnim(doorAnimation, "DoorIn", doorController.GetDoorHandInCountdown()));
+                });
             });
         }
         else if (distanceToA > distanceToB)
         {
-            MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterOutPos().transform.localRotation, 3, ref tempBool);
+            character.transform.LookAt(doorController.GetDoorCharacterOutPos().transform);
             MoveMechanics.Instance.MoveStabile(character, doorController.GetDoorCharacterOutPos().transform.position, 1, ref tempBool, () =>
             {
-                CharacterAnim.Instance.DoorOutAnim();
-                StartCoroutine(DoorAnim(doorAnimation, "DoorOut", doorController.GetDoorHandOutCountdown()));
+                MoveMechanics.Instance.MoveLerpLocalQuaternion(character, doorController.GetDoorCharacterOutPos().transform.localRotation, 3, ref tempBool, () =>
+                {
+                    CharacterAnim.Instance.IdleAnim();
+                    CharacterAnim.Instance.DoorOutAnim();
+                    StartCoroutine(DoorAnim(doorAnimation, "DoorOut", doorController.GetDoorHandOutCountdown()));
+                });
             });
         }
 
